@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ctp-db-service
+spec:
+  selector:
+    tag: ctp-db
+  ports:
+    - name: db
+      port: 3306
+      protocol: TCP

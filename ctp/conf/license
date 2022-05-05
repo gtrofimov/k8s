@@ -1,0 +1,12 @@
+#Wed Oct 19 15:38:32 UTC 2016
+ctp.license.custom_edition_features=API Testing, Environment Manager, Service Virtualization, Data Management, Data Modeling, Unlimited Users
+ctp.license.use_network=true
+em.license.use_network=true
+em.license_enabled=true
+license.network.auth.enabled=true
+license.network.host=snake.parasoft.com
+license.network.password=6561fd3e6952746f
+license.network.port=443
+license.network.user=devtest
+usage.reporting.enabled=false
+parasoft.eula.accepted=true

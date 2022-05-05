@@ -1,0 +1,206 @@
+# Configuration for soavirt
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: soavirt-config
+data:
+  config.properties: |
+    # Configuration properties for soavirt server
+
+    # === END USER LICENSE AGREEMENT ===
+    # Set to true to accept the end user license agreement
+    # Please review the EULA.txt file included in the distribution zip for soavirt.war
+    parasoft.eula.accepted=true
+
+    # === WORKING DIRECTORY ===
+    # Specifies workspace location
+    #working.dir=
+
+    # === LOGGING CONFIGURATION ===
+    # Specifies configuration file for logging
+    #logging.config.file=/WEB-INF/default.logging.xml
+    # Replace with the following line to enable debug information
+    logging.config.file=/WEB-INF/debug.logging.xml
+
+
+
+    # === CTP SERVER ===
+    # Specifies CTP server endpoint
+    #env.manager.server=http\://[CTP Server Host]\:8080
+
+    # Specifies the server name that will be displayed in CTP
+    #env.manager.server.name=[Server Name]
+
+    # Specifies username for CTP authentication
+    #env.manager.username=[CTP Server Username]
+
+    # Specifies password for CTP authentication
+    #env.manager.password=[CTP Server Password]
+
+    # Enables notifications to CTP for deployments
+    #env.manager.notify=true
+
+
+    # === SERVLET CONTAINER PORTS ===
+    # Modify ports to match your servlet container settings
+    # Specifies port for http
+    server.port.http=9080
+
+    # Specifies port for https
+    #server.port.https=8443
+
+
+    # === PRODUCT LICENSING ===
+    # Enables virtualize functionality
+    virtualize.license.enabled=true
+
+    # Enables soatest functionality
+    soatest.license.enabled=true
+
+
+    # === NODE-LOCK LICENSE ===
+    # Specifies password for virtualize local license
+    #virtualize.license.local.password=
+
+    # Specifies password for soatest local license
+    #soatest.license.local.password=
+
+
+    # === NETWORK LICENSE ===
+    # Enables network licensing for virtualize
+    virtualize.license.use_network=true
+
+    # Specifies the type of network license for virtualize ['performance_server_edition','runtime_server_edition','custom_edition']
+    virtualize.license.network.edition=custom_edition
+
+    # Specifies features for virtualize 'custom_edition' license
+    virtualize.license.custom_edition_features=Service Enabled, Performance, Extension Pack, Validate, Message Packs, Developer Sandbox 1000 Hits/Day, 10000 Hits/Day, 25000 Hits/Day, 50000 Hits/Day, 100000 Hits/Day, 500000 Hits/Day, 1 Million Hits/Day, Unlimited Hits/Day, 30 HPS
+
+    # Enables network licensing for soatest
+    soatest.license.use_network=true
+
+    # Specifies the type of network license for soatest ['server_edition', 'server_edition_2011','custom_edition']
+    soatest.license.network.edition=custom_edition
+
+    # Specifies features for soatest 'custom_edition' license
+    soatest.license.custom_edition_features=RuleWizard, Command Line, SOA, Web, Server API Enabled, Jtest Connect, Stub Desktop, Stub Server, Message Packs, Advanced Test Generation Desktop, Advanced Test Generation 5 Users, Advanced Test Generation 25 Users, Advanced Test Generation 100 Users
+
+
+    # === LICENSE SERVER ===
+    # Enables using a specific license server
+    # If true, the license network properties below will be used to retrieve a license
+    # If false, the DTP server properties will be used to retrieve a license
+    license.network.use.specified.server=true
+
+    # Specifies license server host
+    license.network.host=snake.parasoft.com
+
+    # Specifies the connection type to the license server ['http','tcp']
+    license.network.connection.type=tcp
+
+    # Specifies license server port
+    # Common ports for http and tcp are [8443,2002]
+    license.network.port=2002
+
+    # Enables http authentication for the license server
+    license.network.auth.enabled=false
+
+    # Specifies username for license server authentication
+    #license.network.user=[License Server Username]
+
+    # Specifies password for license server authentication
+    #license.network.password=[License Server Password]
+
+
+    # === DTP SERVER ===
+    # Specifies DTP server host
+    #dtp.server=[DTP Server Host]
+
+    # Specifies DTP server port
+    #dtp.port=8443
+
+    # Specifies username for DTP authentication
+    #dtp.user=[DTP Server Username]
+
+    # Specifies password for DTP authentication
+    #dtp.password=[DTP Server Password]
+
+
+    # === MISC ===
+    # Specifies scripting timeout in minutes
+    #scripting.timeout.minutes=10
+
+
+    # === REPORTS ===
+    # Specifies a tag that represents a unique identifier for each run
+    # e.g., ${config_name}-${project_module}-${scontrol_branch}-${exec_env}
+    #session.tag=${config_name}
+
+    # Specifies a build identifier used to label results
+    #build.id=${dtp_project}-yyyy-MM-dd
+
+    # Specifies data that should be included in the report
+    #report.developer_errors=true
+    #report.developer_reports=true
+    #report.authors_details=true
+    #report.testcases_details=false
+    #report.test_suites_only=true
+    #report.failed_tests_only=false
+    #report.associations=false
+    #report.assoc.url.pr=
+    #report.assoc.url.fr=
+    #report.assoc.url.task=
+    #report.assoc.url.req=
+    #report.assoc.url.test=
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: soavirt
+  labels:
+    tag: soavirt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tag: soavirt
+  template:
+    metadata:
+      labels:
+        tag: soavirt
+    spec:
+      # Add an nfs volume
+      volumes:
+      - name: nfs-volume
+        nfs:
+          # The DNS name of the nfs-service, IP address could also be used as long as the
+          # service is not deleted and recreated. In an actual user environment the NFS
+          # server maybe not be a service inside the kube cluster.
+          #
+          # kubectl describe service/nfs-service
+          server: 10.103.19.19
+          path: /
+      - name: soavirt-config
+        configMap:
+          name: soavirt-config
+      containers:
+      - name: soavirt
+        image: parasoft/soavirt-server
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        # Mount the nfs volume as the workspace
+        - name: nfs-volume
+          mountPath: /usr/local/parasoft/soavirt/webapps/ROOT/workspace
+        # Mount the config.properties into the webapp
+        - name: soavirt-config
+          # The destination file in the pod
+          mountPath: /usr/local/parasoft/soavirt/webapps/config.properties
+          # The source from the configMap.data[]
+          subPath: config.properties
+        ports:
+        - containerPort: 9080
+        env:
+        - name: ACCEPT_EULA
+          value: "true"
+        - name: CATALINA_OPTS
+          value: "-Dparasoft.auto.deploy.new=false"

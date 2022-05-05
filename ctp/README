@@ -1,0 +1,19 @@
+Sequence of Steps
+
+1.) Create db service and db pod
+  # Modify user/password in sql file
+    Can the default user/password in mysql_db.sql
+    Edit the db_config.xml with the new user/pass
+
+  kubectl cp /tmp/foo/mysql_db.sql <some-namespace>/<some-pod>:/tmp/bar
+  kubectl exec --stdin --tty ctp-db -- /bin/bash
+
+  # Setup the tables
+  mysql < /tmp/bar/mysql_db.sql
+
+2.) Create configmap ctp-config
+  # Make sure to download the mysql driver jar first!
+
+  kubectl create configmap ctp-jdbc-driver --from-file=mysql-connector-java.jar
+
+3.) Create CTP service and CTP pod

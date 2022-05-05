@@ -1,0 +1,15 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: ctp-db
+  labels:
+    tag: ctp-db
+spec:
+  # TODO persistent volume for database data
+  containers:
+    - name: ctp-db
+      image: mysql:5.7
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: notrootpassword

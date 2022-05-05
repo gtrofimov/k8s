@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: soavirt
+  labels:
+    tag: soavirt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tag: soavirt
+  template:
+    metadata:
+      labels:
+        tag: soavirt
+    spec:
+      volumes:
+      - name: soavirt-config
+        configMap:
+          name: soavirt-config
+      containers:
+      - name: soavirt
+        image: parasoft/soavirt-server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        env:
+        - name: ACCEPT_EULA
+          value: "true"

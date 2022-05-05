@@ -1,0 +1,52 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: ctp
+  labels:
+    tag: ctp
+spec:
+  containers:
+    - name: ctp
+      image: parasoft/ctp
+      imagePullPolicy: IfNotPresent
+      volumeMounts:
+        - name: ctp-config-secret
+          mountPath: /usr/local/parasoft/ctp/webapps/em/config/db_config.xml
+          subPath: db_config.xml
+        - name: ctp-config-secret
+          mountPath: /usr/local/parasoft/ctp/webapps/em/config/PSTSecConfig.xml
+          subPath: PSTSecConfig.xml
+        - name: ctp-license-secret
+          mountPath: /usr/local/parasoft/ctp/webapps/em/license
+          subPath: license
+        - name: ctp-server-secret
+          mountPath: /usr/local/parasoft/ctp/conf/server.xml
+          subPath: server.xml
+        - name: ctp-keystore-secret
+          mountPath: /usr/local/parasoft/ctp/.keystore
+          subPath: .keystore
+        - name: ctp-jdbc-driver
+          mountPath: /usr/local/parasoft/ctp/webapps/em/WEB-INF/lib/mysql-connector-java.jar
+          subPath: mysql-connector-java.jar
+  # TODO persistent volumes for exports
+  volumes:
+    - name: ctp-config-secret
+      secret:
+        secretName: ctp-config-secret
+    - name: ctp-license-secret
+      secret:
+        secretName: ctp-license-secret
+    - name: ctp-server-secret
+      secret:
+        secretName: ctp-server-secret
+    - name: ctp-keystore-secret
+      secret:
+        secretName: ctp-keystore-secret
+    - name: ctp-jdbc-driver
+      configMap:
+        name: ctp-jdbc-driver
+  # TODO not sure if these are needed they didn't solve the volume permissions issues
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000

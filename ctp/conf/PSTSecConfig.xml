@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pstsec-config>
+  <password-required>true</password-required>
+  <remote-authentication>
+    <enabled>true</enabled>
+    <host>snake.parasoft.com</host>
+    <port>80</port>
+    <username>devtest</username>
+    <password>dev%pass</password>
+  </remote-authentication>
+
+</pstsec-config>

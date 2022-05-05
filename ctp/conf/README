@@ -1,0 +1,7 @@
+# Download
+#
+curl -O http://nexus.parasoft.com:8081/nexus/service/local/repositories/central/content/mysql/mysql-connector-java/5.1.48/mysql-connector-java-5.1.48.jar
+
+# Rename to remove version number
+#
+mv mysql-connector-java-5.1.48.jar mysql-connector-java.jar

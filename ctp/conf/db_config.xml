@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+   <db_config>
+      <connection>
+         <url>jdbc:mysql://ctp-db-service:3306/ctp?useUnicode=true&amp;characterEncoding=UTF-8&amp;sessionVariables=sql_mode=NO_BACKSLASH_ESCAPES&amp;useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Etc/UTC</url>
+         <username>em</username>
+         <password>em</password> <!-- TODO what is a better option for this? -->
+      </connection>
+   </db_config>
+</configuration>
