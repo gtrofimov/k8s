@@ -18,6 +18,12 @@ spec:
       - name: soavirt-config
         configMap:
           name: soavirt-config
+      volumeMounts:
+      - name: soavirt-config
+        # The destination file in the pod
+        mountPath: /usr/local/parasoft/soavirt/webapps/config.properties
+        # The source from the configMap.data[]
+        subPath: config.properties
       containers:
       - name: soavirt
         image: parasoft/soavirt-server
