@@ -93,14 +93,14 @@ data:
     license.network.use.specified.server=true
 
     # Specifies license server host
-    license.network.host=snake.parasoft.com
+    #license.network.host=
 
     # Specifies the connection type to the license server ['http','tcp']
-    license.network.connection.type=tcp
+    #license.network.connection.type=tcp
 
     # Specifies license server port
     # Common ports for http and tcp are [8443,2002]
-    license.network.port=2002
+    license.network.port=8443
 
     # Enables http authentication for the license server
     license.network.auth.enabled=false
