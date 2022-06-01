@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: datarepo
+  labels:
+    tag: datarepo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tag: datarepo
+  template:
+    metadata:
+      labels:
+        tag: datarepo
+    spec:
+      containers:
+      - name: datarepo
+        image: parasoft/datarepo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 2424
