@@ -16,15 +16,3 @@ spec:
     - name: statistics
       port: 9618
       protocol: TCP
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ctp-service
-spec:
-  selector:
-    tag: ctp
-  ports:
-    - name: http
-      port: 8080
-      protocol: TCP
