@@ -1,0 +1,12 @@
+# Separate service for stable IP address
+kind: Service
+apiVersion: v1
+metadata:
+  name: datarepo
+spec:
+  selector:
+    tag: datarepo
+  ports:
+    - name: tcp-2424
+      port: 2424
+      protocol: TCP
